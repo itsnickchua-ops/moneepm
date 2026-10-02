@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fund Updates Concept</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --page:#eceef1; --ink:#16181c; --muted:#5d6370; --line:#d9dce2; --chip:#ffffff; --accent:#EA5F00;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --page:#15171b; --ink:#eef0f3; --muted:#a2a8b3; --line:#2d3139; --chip:#1f2228; }
+}
+:root[data-theme="dark"]{ --page:#15171b; --ink:#eef0f3; --muted:#a2a8b3; --line:#2d3139; --chip:#1f2228; }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--page);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+
+/* ---------- presentation chrome ---------- */
+.top{max-width:1240px;margin:0 auto;padding:28px 16px 8px}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:700}
+h1{font-size:30px;line-height:1.15;margin:6px 0 6px;letter-spacing:-.02em}
+.lede{color:var(--muted);font-size:15px;line-height:1.5;max-width:760px;margin:0}
+.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:18px}
+.seg{display:inline-flex;background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:4px}
+.seg button{border:0;background:transparent;color:var(--muted);font:600 14px Inter,sans-serif;padding:8px 16px;border-radius:999px;cursor:pointer}
+.seg button.on{background:var(--accent);color:#fff}
+.toggle{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);cursor:pointer;user-select:none}
+.toggle input{accent-color:var(--accent);width:16px;height:16px}
+.stage{max-width:1240px;margin:0 auto;padding:18px 16px 24px;display:flex;flex-wrap:wrap;gap:28px;justify-content:center;align-items:flex-start}
+.slot{display:flex;flex-direction:column;align-items:center;gap:14px}
+.cap{max-width:330px;font-size:13.5px;line-height:1.5;color:var(--muted)}
+.cap b{color:var(--ink)}
+.num{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700;margin-right:6px;vertical-align:1px}
+[hidden]{display:none!important}
+
+/* ---------- phone frame ---------- */
+.phone-wrap{width:calc(446px * var(--z));height:calc(948px * var(--z));}
+.phone{width:446px;height:948px;border-radius:62px;background:#0d0d0f;padding:8px;box-shadow:0 30px 60px -25px rgba(0,0,0,.45),0 0 0 1.5px #2a2a2e inset;transform:scale(var(--z));transform-origin:top left}
+.screen{position:relative;width:430px;height:932px;border-radius:54px;overflow:hidden;background:#F7F8F9;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Helvetica Neue",Inter,Arial,sans-serif;color:#1a1a1a;-webkit-font-smoothing:antialiased}
+.island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:126px;height:37px;border-radius:20px;background:#000;z-index:60}
+.status{position:absolute;top:0;left:0;right:0;height:54px;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:6px 34px 0 58px;pointer-events:none}
+.status .t{font-weight:600;font-size:17.5px;letter-spacing:-.2px}
+.status .ic{display:flex;gap:7px;align-items:center}
+.status.light{color:#fff}
+.homebar{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:140px;height:5px;border-radius:3px;background:#111;z-index:80}
+
+.scroll{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
+
+/* ---------- Mari UI ---------- */
+.nav{height:58px;display:flex;align-items:center;padding:0 16px 0 18px;gap:18px}
+.nav h2{margin:0;font-size:24px;font-weight:500;letter-spacing:-.3px}
+.nav .back{width:26px;height:26px;display:grid;place-items:center;cursor:pointer}
+.hero{background:
+   radial-gradient(70% 55% at 78% 4%, rgba(255,186,140,.85) 0%, rgba(255,214,190,.55) 40%, rgba(255,235,224,0) 75%),
+   linear-gradient(180deg,#FFE9DC 0%,#FFF1E9 260px,#F7F8F9 560px);}
+.hero-title{color:#EA5F00;font-weight:800;font-size:28px;letter-spacing:-.5px;padding:20px 22px 24px;margin:0}
+.card{background:#fff;border-radius:10px;margin:0 11px 12px;padding:16px 15px}
+.statbox{background:#F8F8F8;border-radius:10px;padding:16px 15px 18px}
+.statbox .h{font-size:17.5px;font-weight:600;display:flex;align-items:center;gap:6px}
+.statbox .u{font-size:13.5px;color:#7d7d7d;margin-top:4px}
+.statbox .row{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.big{display:flex;align-items:baseline;color:#28AB45;font-weight:700}
+.big .n{font-size:41px;letter-spacing:-1px;line-height:1}
+.big .p{font-size:16px;margin-left:3px}
+.big .s{color:#1a1a1a;font-size:15px}
+.risk{border:1px solid #c4c4c4;border-radius:3px;font-size:14px;color:#555;padding:4px 7px}
+ul.bul{list-style:none;padding:0;margin:20px 0 6px}
+ul.bul li{display:flex;gap:18px;align-items:flex-start;font-size:15.5px;line-height:1.35;margin-bottom:17px;padding-left:2px}
+ul.bul li:before{content:"";flex:0 0 6px;height:6px;border-radius:50%;background:#EA5F00;margin-top:7px}
+.g{color:#28AB45}
+.mas{background:#F8F8F8;border-radius:10px;display:flex;align-items:center;gap:22px;padding:14px 16px}
+.mas .a{font-size:13.5px;color:#7a7a7a}
+.mas .b{font-size:16px;color:#1F4D97;font-weight:500;margin-top:2px}
+.disc{font-size:12.5px;color:#8a8a8a;line-height:1.35;margin:18px 0 0}
+.sec-h{font-size:18px;font-weight:600;text-align:center;margin:8px 0 14px;letter-spacing:-.2px}
+.para{font-size:15.5px;line-height:1.48;color:#888;margin:0 0 6px}
+.src{font-size:15px;color:#888;line-height:1.45;margin:18px 0 6px}
+.donutbox{background:#F8F8F8;border-radius:10px;padding:34px 0 38px;display:flex;justify-content:center;align-items:center;gap:22px;margin-top:22px}
+.legend div{display:flex;align-items:center;gap:8px;font-size:14.5px;color:#777;margin:7px 0}
+.legend i{width:13px;height:5px;border-radius:1px;display:inline-block}
+.legend b{font-weight:400;color:#1a1a1a;margin-left:auto;padding-left:18px}
+table.hold{width:100%;border-collapse:separate;border-spacing:0;border:1px solid #ececec;border-radius:12px;overflow:hidden;font-size:15.5px;margin-top:22px}
+table.hold th{background:#F7F7F7;text-align:left;font-weight:600;padding:14px 12px}
+table.hold td{padding:13px 12px;line-height:1.45;vertical-align:middle}
+table.hold tr:nth-child(odd) td{background:#FAFAFA}
+table.hold td:first-child,table.hold th:first-child{border-right:1px solid #ececec;width:50%}
+.ptabs{display:flex;border-bottom:1px solid #eee;margin:-16px -15px 0}
+.ptabs div{flex:1;text-align:center;font-size:18.5px;padding:17px 0 15px;cursor:pointer;position:relative}
+.ptabs div.on{color:#EA5F00;font-weight:500}
+.ptabs div.on:after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:3px;background:#EA5F00}
+.perf-h{font-size:19px;font-weight:700;text-align:center;margin:26px 0 22px}
+.ret{font-size:15px;margin:0 0 10px}
+.ranges{display:flex;gap:8px;margin:14px 0 18px;overflow:hidden}
+.ranges span{flex:0 0 auto;background:#F4F4F4;border-radius:2px;font-size:14.5px;padding:10px 13px}
+.upd{font-size:14px;color:#666;display:flex;align-items:center;gap:8px}
+.fine{font-size:13.5px;color:#888;line-height:1.45;margin:16px 0 0}
+.links a{display:block;color:#2C7BE5;font-size:16px;text-decoration:none;margin:0 0 27px 2px}
+.faq .q{display:flex;justify-content:space-between;align-items:center;gap:16px;font-size:16px;line-height:1.35;padding:18px 2px;border-bottom:1px solid #eee}
+.seemore{color:#858585;font-size:16px;text-align:center;padding:16px 0 4px;display:flex;justify-content:center;align-items:center;gap:6px;cursor:pointer}
+.buybar{position:absolute;left:0;right:0;bottom:0;background:#fff;padding:12px 11px 36px;z-index:40}
+.btn{background:#EA5F00;color:#fff;border-radius:7px;height:51px;display:grid;place-items:center;font-size:18px;cursor:pointer}
+.sticky{position:absolute;top:0;left:0;right:0;background:#fff;z-index:45;padding-top:54px;opacity:0;pointer-events:none;transition:opacity .18s}
+.sticky.on{opacity:1;pointer-events:auto}
+.pills{display:flex;gap:8px;padding:6px 16px 12px;overflow:hidden}
+.pill{flex:0 0 auto;border:1px solid #e3e3e3;border-radius:999px;font-size:16px;color:#5a5a5a;padding:7px 15px;cursor:pointer;background:#fff}
+.pill.on{border-color:#EA5F00;background:#FFF5EC;color:#EA5F00;font-weight:500}
+
+/* ---------- NEW: Fund Updates ---------- */
+.npill{display:inline-block;vertical-align:middle;margin-left:7px;font-size:10.5px;font-weight:700;letter-spacing:.06em;color:#EA5F00;background:#FFF5EC;border-radius:999px;padding:2px 7px;line-height:1.4}
+.fu-sub{font-size:13.5px;color:#8a8a8a;text-align:center;margin:-8px 0 16px;line-height:1.4}
+.isnew{position:relative}
+body.shownew .isnew{outline:2px dashed #EA5F00;outline-offset:3px}
+body.shownew .isnew > .newtag{display:block}
+.newtag{display:none;position:absolute;top:-10px;right:10px;background:#EA5F00;color:#fff;font:700 10.5px/1 Inter,sans-serif;letter-spacing:.06em;padding:5px 7px;border-radius:4px;z-index:5}
+.pulse-sub{font-size:13.5px;color:#8a8a8a;text-align:center;margin:-8px 0 18px;line-height:1.4}
+.tl{position:relative}
+.ent{display:grid;grid-template-columns:52px 16px 1fr;column-gap:8px;position:relative;padding-bottom:18px}
+.ent .d{font-size:14.5px;color:#1a1a1a;text-align:right;line-height:1.2;padding-top:1px}
+.ent .d small{display:block;color:#9a9a9a;font-size:12px;margin-top:3px}
+.ent .rail{position:relative;display:flex;justify-content:center}
+.ent .rail:before{content:"";position:absolute;top:16px;bottom:-18px;width:1.5px;background:#ececec}
+.ent:last-child .rail:before{display:none}
+.dot{width:11px;height:11px;border-radius:50%;border:1.5px solid #c9c9c9;background:#fff;margin-top:4px;position:relative;z-index:1}
+.dot.live{background:#EA5F00;border-color:#EA5F00;box-shadow:0 0 0 4px rgba(234,95,0,.15)}
+.ent .hd{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:15.5px;font-weight:600}
+.chg{display:inline-flex;align-items:center;gap:2px;font-weight:500;font-size:14.5px}
+.chg.up{color:#28AB45}.chg.dn{color:#1a1a1a}
+.ent .tx{font-size:14.5px;line-height:1.48;color:#555;margin-top:5px}
+.clamp3{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.clamp2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.more{color:#EA5F00;font-size:14px;cursor:pointer;margin-top:3px;display:inline-block}
+.movers{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.movers .lab{width:100%;font-size:12px;color:#9a9a9a}
+.mv{font-size:12.5px;border:1px solid #eee;border-radius:999px;padding:4px 9px;background:#fafafa}
+.srcchip{display:inline-flex;align-items:center;gap:7px;border:1px solid #e6e6e6;border-radius:999px;padding:4px 10px 4px 5px;font-size:12.5px;color:#666;margin-top:10px;cursor:pointer;background:#fff}
+.av{display:flex}
+.av span{width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-size:9px;font-weight:700;color:#fff;border:1.5px solid #fff;margin-left:-5px}
+.av span:first-child{margin-left:0}
+.srclist{margin:8px 0 0;padding:0;list-style:none;font-size:12.5px;color:#666;line-height:1.4}
+.srclist li{padding:6px 0;border-top:1px solid #f1f1f1}
+.srclist li b{color:#1a1a1a;font-weight:500}
+.srclist a{color:inherit;text-decoration:none;display:block}
+.srclist a:hover b{color:#EA5F00;text-decoration:underline}
+.wrow{display:grid;grid-template-columns:78px 1fr;gap:8px;font-size:13.5px;line-height:1.4;padding:7px 0;border-top:1px solid #eee}
+.wrow:first-of-type{border-top:0}
+.wrow .w{color:#EA5F00;font-weight:500}
+.wrow .x{color:#555}
+.wrow .x b{color:#1a1a1a;font-weight:500}
+.ai{font-size:12px;color:#9a9a9a;line-height:1.45;margin-top:12px;display:flex;gap:6px}
+.fb{display:flex;align-items:center;gap:12px;font-size:12.5px;color:#888;margin-top:10px}
+.fb button{border:1px solid #e6e6e6;background:#fff;border-radius:999px;width:30px;height:26px;display:grid;place-items:center;cursor:pointer;padding:0}
+.fb button.sel{border-color:#EA5F00;background:#FFF5EC}
+
+/* timeline page */
+.wnav{background:#fff}
+.chips{display:flex;gap:8px;margin:2px 0 18px}
+.tlhead{font-size:13.5px;color:#888;line-height:1.45;margin:0 0 14px}
+.empty{font-size:14.5px;color:#888;text-align:center;padding:26px 10px 30px;line-height:1.5}
+
+/* ---------- Holdings ---------- */
+.hold-bg{background:linear-gradient(180deg,#EA5F00 0,#EA5F00 168px,#F4A774 188px,#F7F8F9 200px)}
+.hnav h2{color:#fff}
+.hcard{background:#fff;border-radius:10px;margin:0 12px 12px;overflow:hidden}
+.banner{height:48px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:17px;font-weight:500;
+  background:linear-gradient(90deg,#FFF5F1 0%,#FDE6D9 70%,#FCDCCB 100%);position:relative;overflow:hidden}
+.banner svg.arcs{position:absolute;right:30px;top:-40px;opacity:.55}
+.banner .o{color:#EA5F00;font-weight:700}
+.circ{width:22px;height:22px;border-radius:50%;background:#fff;display:grid;place-items:center;position:relative;z-index:1}
+.cmv{text-align:center;padding:20px 0 0}
+.cmv .l{font-size:17px;color:#777;display:flex;align-items:center;justify-content:center;gap:6px}
+.cmv .v{display:flex;align-items:baseline;justify-content:center;gap:9px;margin-top:10px}
+.cmv .v .c{font-size:15.5px}
+.cmv .v .n{font-size:30px;font-weight:600;letter-spacing:-.5px}
+.cols{display:flex;margin:26px 0 22px}
+.cols>div{flex:1;text-align:center}
+.cols>div+div{border-left:1px solid #e5e5e5}
+.cols .l{font-size:15px;color:#555}
+.cols .v{color:#28AB45;font-size:20px;font-weight:500;margin-top:6px;display:flex;align-items:baseline;justify-content:center;gap:4px}
+.cols .v small{font-size:13px}
+.bt{display:flex;gap:12px;padding:0 16px 20px}
+.bt div{flex:1;height:45px;border-radius:3px;display:grid;place-items:center;font-size:17px;cursor:pointer}
+.bt .sell{border:1px solid #EA5F00;color:#EA5F00}
+.bt .buy{background:#EA5F00;color:#fff}
+.lrow{background:#fff;border-radius:10px;margin:0 12px 12px;display:flex;align-items:center;gap:12px;padding:0 16px;height:52px;font-size:17px}
+.lrow .r{margin-left:auto;display:flex;align-items:center;gap:8px;color:#757575;font-size:15px}
+.rh{display:flex;justify-content:space-between;align-items:center;padding:16px 16px;font-size:18px;font-weight:600;border-bottom:1px solid #ebebeb}
+.rrow{display:flex;justify-content:space-between;align-items:flex-start;padding:16px 0;margin:0 16px;border-bottom:1px solid #ebebeb;cursor:pointer;gap:10px}
+.rrow:last-of-type{border-bottom:0}
+.rrow .a{font-size:17.5px}
+.rrow .b{font-size:14.5px;color:#999;margin-top:5px}
+.why{display:flex;gap:5px;align-items:flex-start;font-size:13.5px;color:#6b6b6b;margin-top:7px;line-height:1.35}
+.why svg{flex:0 0 auto;margin-top:2px}
+.why span{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.amt{white-space:nowrap;display:flex;align-items:baseline;gap:3px;padding-top:12px}
+.amt small{font-size:13.5px}
+.amt b{font-size:19px;font-weight:600}
+.amt.up{color:#28AB45}.amt.dn{color:#1a1a1a}
+.trow{display:flex;gap:14px;align-items:flex-start;padding:16px 16px 14px;margin-left:0}
+.trow + .trow{border-top:1px solid #ebebeb;margin-left:74px;padding-left:0}
+.ticon{width:32px;height:32px;border-radius:50%;background:#2673DD;display:grid;place-items:center;flex:0 0 auto;margin-top:6px}
+.trow .m{flex:1}
+.trow .m .x{font-size:17px}
+.trow .m .y{font-size:15px;margin-top:4px}
+.trow .m .z{font-size:14.5px;color:#888;margin-top:4px}
+.trow .rt{text-align:right}
+.trow .rt .v{font-size:13.5px;margin-top:4px}
+.trow .rt .v b{font-size:18.5px;font-weight:600}
+.trow .rt .ok{color:#28AB45;font-size:14px;margin-top:4px}
+.wcard{background:#fff;border-radius:10px;margin:0 12px 12px;padding:14px 16px 14px}
+.wcard .wtop{display:flex;justify-content:space-between;align-items:center}
+.wcard .ti{font-size:17px;font-weight:600;display:flex;align-items:center;gap:7px}
+.wcard .dt{font-size:13px;color:#999}
+.wcard .imp{display:flex;align-items:baseline;gap:8px;margin-top:10px;font-size:14px;color:#666}
+.wcard .imp b{font-size:18px;color:#1a1a1a;font-weight:600}
+.wcard .tx{font-size:14.5px;line-height:1.48;color:#555;margin-top:6px}
+
+
+/* monthly digest */
+.dg-head{background:#fff;border-radius:10px;margin:12px 11px 12px;padding:18px 16px}
+.dg-eye{font-size:13px;letter-spacing:.06em;color:#8a8a8a;font-weight:600}
+.dg-title{font-size:20px;font-weight:600;margin-top:4px}
+.dg-sub{font-size:13.5px;color:#999;margin-top:4px}
+.dg-item{display:grid;grid-template-columns:26px 1fr;gap:10px;padding:14px 0;border-top:1px solid #f0f0f0}
+.dg-item:first-of-type{border-top:0;padding-top:4px}
+.dg-n{width:22px;height:22px;border-radius:50%;background:#FFF5EC;color:#EA5F00;font-size:12.5px;font-weight:700;display:grid;place-items:center;margin-top:1px}
+.dg-item b{font-size:15.5px;display:block;margin-bottom:4px}
+.dg-item p{margin:0;font-size:14.5px;line-height:1.48;color:#555}
+.dg-src{font-size:12px;color:#9a9a9a;margin-top:6px}
+.dg-src a,.dg-note a{color:inherit;text-decoration:underline}
+.dg-cat{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:#B84A00;font-weight:600;margin-bottom:3px}
+.dg-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:12px 0;border-top:1px solid #f0f0f0}
+.dg-row:first-of-type{border-top:0;padding-top:2px}
+.dg-row .nm{font-size:15px}
+.dg-row .nt{font-size:13.5px;color:#777;margin-top:3px;line-height:1.4}
+.dg-row .wt{font-size:14.5px;color:#1a1a1a;white-space:nowrap}
+.dg-note{font-size:12.5px;color:#9a9a9a;line-height:1.45;margin-top:8px}
+.pg{position:absolute;inset:0;transform:translateX(100%);transition:transform .3s cubic-bezier(.2,.8,.2,1);z-index:66}
+/* lock screen */
+.lock{position:absolute;inset:0;background:
+  radial-gradient(90% 60% at 20% 15%, #ffb089 0%, rgba(255,176,137,0) 60%),
+  radial-gradient(80% 60% at 90% 70%, #6e4bd8 0%, rgba(110,75,216,0) 65%),
+  linear-gradient(170deg,#f07a46 0%,#b8467a 50%,#2c2367 100%);color:#fff}
+.lock .date{text-align:center;font-size:21px;font-weight:600;margin-top:92px;opacity:.92}
+.lock .clock{text-align:center;font-size:104px;font-weight:600;letter-spacing:-2px;line-height:1;margin-top:2px}
+.notif{position:absolute;left:12px;right:12px;bottom:150px;background:rgba(245,245,247,.78);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-radius:22px;padding:12px 14px 13px;color:#111;display:flex;gap:11px}
+.notif.ghost{bottom:138px;left:22px;right:22px;height:40px;opacity:.55;padding:0;z-index:0}
+.notif .app{width:38px;height:38px;border-radius:9px;background:#EA5F00;display:grid;place-items:center;flex:0 0 auto;margin-top:2px}
+.notif .hd{display:flex;justify-content:space-between;gap:8px;font-size:15px;font-weight:600;line-height:1.3}
+.notif .hd span{font-weight:400;color:#6b6b6b;font-size:13.5px}
+.notif .bd{font-size:15px;line-height:1.33;margin-top:1px}
+.lockbot{position:absolute;bottom:52px;left:0;right:0;display:flex;justify-content:space-between;padding:0 48px}
+.lockbot div{width:50px;height:50px;border-radius:50%;background:rgba(0,0,0,.25);backdrop-filter:blur(10px);display:grid;place-items:center}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="eyebrow">Product concept · Mari Invest</div>
+  <h1>Fund Updates: clearer context for Mari Invest customers</h1>
+  <p class="lede">Fund Updates is a proposed feature that gives customers plain-language, sourced context on market developments that may have affected a fund. Customers see the same reviewed updates before they invest, in My Holdings and in a monthly summary. This demo uses Mari Invest Singapore Equity.</p>
+  <p class="lede" style="font-size:12.5px;margin-top:8px">Concept only, not affiliated with MariBank or Monee. Market events are real (25 to 30 Sep 2026). Fund prices, returns and holding values are illustrative.</p>
+  <div class="controls">
+    <div class="seg" role="tablist">
+      <button class="on" data-view="before">Before purchase</button>
+      <button data-view="after">After purchase</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="stage" id="before"></section>
+  <section class="stage" id="after" hidden></section>
+</main>
+
+<script>
+/* ===================== icons ===================== */
+const I = {
+  back:(c='#333')=>`<svg width="14" height="24" viewBox="0 0 14 24"><path d="M12 2L2 12l10 10" stroke="${c}" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  chev:(c='#9a9a9a',s=16)=>`<svg width="${s*0.6}" height="${s}" viewBox="0 0 10 17"><path d="M1.5 1.5l7 7-7 7" stroke="${c}" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  chevB:(c='#858585')=>`<svg width="9" height="14" viewBox="0 0 9 14"><path d="M2 1.5l5.5 5.5L2 12.5" stroke="${c}" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  info:(c='#888',s=18)=>`<svg width="${s}" height="${s}" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8.6" stroke="${c}" stroke-width="1.5" fill="none"/><path d="M10 9v5.2" stroke="${c}" stroke-width="1.8" stroke-linecap="round"/><circle cx="10" cy="6" r="1.1" fill="${c}"/></svg>`,
+  trend:`<svg width="34" height="22" viewBox="0 0 34 22"><path d="M2 19l10-10 6 6L30 3" stroke="#28AB45" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 2.5h10v10" stroke="#28AB45" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  shield:`<svg width="30" height="34" viewBox="0 0 30 34"><defs><linearGradient id="sg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7DB4F4"/><stop offset="1" stop-color="#2B6BD6"/></linearGradient></defs><path d="M2 3h26v12c0 9-6 15-13 17C8 30 2 24 2 15z" fill="url(#sg)" stroke="#1E4FA8" stroke-width="2.4"/><path d="M15 3v29" stroke="#fff" stroke-opacity=".55" stroke-width="1.2"/></svg>`,
+  eye:`<svg width="22" height="16" viewBox="0 0 22 16"><path d="M1.5 8S5 1.8 11 1.8 20.5 8 20.5 8 17 14.2 11 14.2 1.5 8 1.5 8z" stroke="#777" stroke-width="1.6" fill="none"/><circle cx="11" cy="8" r="2.6" stroke="#777" stroke-width="1.6" fill="none"/></svg>`,
+  hist:`<svg width="20" height="20" viewBox="0 0 20 20"><rect width="20" height="20" rx="3" fill="#FA5E00"/><path d="M3 13l4-4 3 3 6-6" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 17l4-4 3 3 6-6" stroke="#fff" stroke-opacity=".0" stroke-width="2" fill="none"/></svg>`,
+  up:`<svg width="13" height="13" viewBox="0 0 13 13"><path d="M2 11L11 2M4 2h7v7" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round"/></svg>`,
+  dn:`<svg width="13" height="13" viewBox="0 0 13 13"><path d="M2 2l9 9M11 4v7H4" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round"/></svg>`,
+  pulse:(c='#EA5F00',s=14)=>`<svg width="${s}" height="${s}" viewBox="0 0 16 16"><path d="M1 8.5h3l2-5 3.2 9 2.2-6 1 2H15" stroke="${c}" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  cal:`<svg width="14" height="14" viewBox="0 0 16 16"><rect x="1.5" y="2.5" width="13" height="12" rx="2" stroke="#1a1a1a" stroke-width="1.4" fill="none"/><path d="M1.5 6.5h13M5 1v3M11 1v3" stroke="#1a1a1a" stroke-width="1.4" stroke-linecap="round"/></svg>`,
+  spark:`<svg width="13" height="13" viewBox="0 0 16 16"><path d="M8 1l1.6 4.4L14 7l-4.4 1.6L8 13l-1.6-4.4L2 7l4.4-1.6z" fill="#b5b5b5"/></svg>`,
+  thumb:(d=false)=>`<svg width="14" height="14" viewBox="0 0 16 16" style="${d?'transform:rotate(180deg)':''}"><path d="M5 14V7l3-5.5c1.2 0 1.8.8 1.6 2L9.2 6H13c1 0 1.6.9 1.4 1.8l-1.1 4.8c-.2.8-.9 1.4-1.7 1.4zM5 7H2v7h3" stroke="#666" stroke-width="1.3" fill="none" stroke-linejoin="round"/></svg>`,
+  x:`<svg width="11" height="11" viewBox="0 0 12 12"><path d="M1.5 1.5l9 9M10.5 1.5l-9 9" stroke="#555" stroke-width="1.8" stroke-linecap="round"/></svg>`,
+  buy:`<svg width="18" height="18" viewBox="0 0 20 20"><rect x="3" y="11" width="2.6" height="6" rx=".6" fill="#fff"/><rect x="7.4" y="8.5" width="2.6" height="8.5" rx=".6" fill="#fff"/><rect x="11.8" y="10" width="2.6" height="7" rx=".6" fill="#fff"/><rect x="16" y="6.5" width="2.6" height="10.5" rx=".6" fill="#fff"/><path d="M2.5 8.5l5-4 3.4 2.6L17 2.5" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>`,
+  coin:`<svg width="18" height="18" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.2" stroke="#fff" stroke-width="1.8" fill="none"/><path d="M12.4 7.4c-.4-.8-1.3-1.2-2.4-1.2-1.4 0-2.4.7-2.4 1.8 0 2.5 5 1.3 5 3.9 0 1.1-1.1 1.9-2.6 1.9-1.2 0-2.1-.5-2.5-1.3M10 4.8v1.4M10 13.8v1.4" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>`,
+  sig:(c)=>`<svg width="20" height="13" viewBox="0 0 20 13"><rect x="0" y="8" width="3.6" height="5" rx="1" fill="${c}"/><rect x="5.3" y="5.5" width="3.6" height="7.5" rx="1" fill="${c}"/><rect x="10.6" y="3" width="3.6" height="10" rx="1" fill="${c}"/><rect x="15.9" y="0" width="3.6" height="13" rx="1" fill="${c}" opacity=".35"/></svg>`,
+  wifi:(c)=>`<svg width="18" height="13" viewBox="0 0 18 13"><path d="M9 12.5l2.6-3.1a4 4 0 0 0-5.2 0z" fill="${c}"/><path d="M3.2 6.6a8.4 8.4 0 0 1 11.6 0l-1.6 1.9a6 6 0 0 0-8.4 0z" fill="${c}"/><path d="M.3 3.4a12.9 12.9 0 0 1 17.4 0l-1.6 1.9a10.4 10.4 0 0 0-14.2 0z" fill="${c}"/></svg>`,
+  bat:(dark)=>`<svg width="30" height="14" viewBox="0 0 30 14"><rect x="0" y="0" width="26" height="14" rx="4.2" fill="${dark?'#000':'#fff'}"/><text x="13" y="11" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Inter,sans-serif" font-size="11.5" font-weight="700" fill="${dark?'#fff':'#EA5F00'}">97</text><rect x="27.2" y="4.5" width="2" height="5" rx="1" fill="${dark?'#000':'#fff'}" opacity=".4"/></svg>`,
+};
+const status=(light=false,time='9:33')=>{const c=light?'#fff':'#000';return `<div class="island"></div><div class="status ${light?'light':''}"><span class="t">${time}</span><span class="ic">${I.sig(c)}${I.wifi(c)}${I.bat(!light)}</span></div>`};
+const phone=(inner,id='')=>`<div class="phone-wrap"><div class="phone"><div class="screen" ${id?`id="${id}"`:''}>${inner}<div class="homebar"></div></div></div></div>`;
+const NEW='<span class="newtag">NEW</span>';
+
+/* ===================== Pulse data ===================== */
+const SRC = {
+  te:{n:'Trading Economics',c:'#1f6feb',l:'T'},
+  inv:{n:'Investrade',c:'#0b8a6a',l:'I'},
+  rtt:{n:'RTTNews via Yahoo Finance SG',c:'#6001d2',l:'Y'},
+  bt:{n:'BusinessToday',c:'#c8102e',l:'B'},
+  fs:{n:'Amova Asset Management',c:'#8a8a8a',l:'A'},
+  fed:{n:'US Federal Reserve',c:'#1a3a6b',l:'F'},
+};
+const ENTRIES = [
+  { id:'s30', date:'30 Sep', dow:'Wed', nav:'1.9855', chg:-0.42,
+    text:'Singapore stocks fell 0.68% as US bond yields rose. Higher bond yields can make dividend-paying shares less attractive. Banks and property companies are major holdings in this fund, so they may have contributed to the decline.',
+    src:[['te','Singapore Stock Market (STI)','30 Sep','https://tradingeconomics.com/singapore/stock-market'],['inv','Market Review: September 29, 2026','29 Sep','https://investrade.com/market-review-september-29-2026/'],['fs','Fund factsheet: holdings and sector weights','31 Jul','https://sg.amova-am.com/general/funds/detail/amova-singapore-dividend-equity-fund-sgd-class']] },
+  { id:'s29', date:'29 Sep', dow:'Tue', nav:'1.9939', chg:-0.31,
+    text:'Singapore stocks fell 0.25% amid high oil prices and rising US bond yields. Higher bond yields can put pressure on property shares, which make up about 13% of the fund.',
+    src:[['rtt','Singapore Shares Drop Over Higher Oil Prices','29 Sep','https://sg.finance.yahoo.com/news/singapore-shares-drop-over-higher-093526775.html'],['inv','Market Review: September 29, 2026','29 Sep','https://investrade.com/market-review-september-29-2026/'],['fs','Fund factsheet: holdings and sector weights','31 Jul','https://sg.amova-am.com/general/funds/detail/amova-singapore-dividend-equity-fund-sgd-class']] },
+  { id:'s28', date:'28 Sep', dow:'Mon', nav:'2.0001', chg:0.28,
+    text:'Singapore stocks rose 0.3%, led by the three local banks. DBS, OCBC and UOB make up about 27% of the fund, so their gains may have supported the fund\'s rise.',
+    movers:{lab:'Top holdings, morning trade',list:[['UOB','+1.6%'],['OCBC','+0.6%'],['DBS','+0.5%']]},
+    src:[['te','Singapore Stocks Hit 3-Week High as Banks Rise','28 Sep','https://tradingeconomics.com/singapore/stock-market/news/587094'],['rtt','Singapore Shares Drop Over Higher Oil Prices (28 Sep close)','29 Sep','https://sg.finance.yahoo.com/news/singapore-shares-drop-over-higher-093526775.html'],['fs','Fund factsheet: holdings and sector weights','31 Jul','https://sg.amova-am.com/general/funds/detail/amova-singapore-dividend-equity-fund-sgd-class']] },
+  { id:'s25', date:'25 Sep', dow:'Fri', nav:'1.9945', chg:0.42,
+    text:'Singapore stocks rose 0.5%, led by gains in OCBC, DBS and UOB. The three banks make up about 27% of the fund and may have supported its rise.',
+    movers:{lab:'Top holdings, close',list:[['OCBC','+1.3%'],['DBS','+0.7%'],['UOB','+0.2%']]},
+    src:[['bt','Singapore Stocks Rise As Bank Gains Lift STI','26 Sep','https://www.businesstoday.com.my/2026/09/26/singapore-stocks-rise-as-bank-gains-lift-sti/'],['fs','Fund factsheet: holdings and sector weights','31 Jul','https://sg.amova-am.com/general/funds/detail/amova-singapore-dividend-equity-fund-sgd-class']] },
+];
+const byId=Object.fromEntries(ENTRIES.map(e=>[e.id,e]));
+
+const chg=(v)=> v>=0?`<span class="chg up">${I.up} ${v.toFixed(2)}%</span>`:`<span class="chg dn">${I.dn} ${Math.abs(v).toFixed(2)}%</span>`;
+const srcChip=(e,open=false)=>{
+  const av=e.src.map(([k])=>`<span style="background:${SRC[k].c}">${SRC[k].l}</span>`).join('');
+  const list=e.src.map(([k,t,d,u])=>`<li><a href="${u}" target="_blank" rel="noopener"><b>${SRC[k].n}</b> · ${d}<br>${t}</a></li>`).join('');
+  return `<div><span class="srcchip" data-src>${'<span class="av">'+av+'</span>'}View sources</span><ul class="srclist" ${open?'':'hidden'}>${list}</ul></div>`;
+};
+const movers=(e)=> e.movers?`<div class="movers"><span class="lab">${e.movers.lab}</span>${e.movers.list.map(([n,v])=>`<span class="mv">${n} <span class="g">${v}</span></span>`).join('')}</div>`:'';
+const feedback=()=>`<div class="fb"><span>Was this helpful?</span><button data-fb>${I.thumb()}</button><button data-fb>${I.thumb(true)}</button><span class="fbmsg"></span></div>`;
+const entryHead=(e)=> `<div class="hd">Fund ${e.chg>=0?'rose':'fell'} ${Math.abs(e.chg).toFixed(2)}% <span style="font-weight:400;color:#999;font-size:13px">· Unit price S$${e.nav}</span></div>`;
+
+function entry(e,{clamp=0,full=false,first=false}={}){
+  const dotc = first?'live':'';
+  const cls = clamp?`clamp${clamp}`:'';
+  return `<div class="ent">
+    <div class="d">${e.date}<small>${e.dow}</small></div>
+    <div class="rail"><span class="dot ${dotc}"></span></div>
+    <div>
+      ${entryHead(e)}
+      <div class="tx ${cls}" data-tx>${e.text}</div>
+      ${clamp?`<span class="more" data-more>Read more</span>`:''}
+      ${full?movers(e):''}
+      ${full||first?srcChip(e):''}
+      ${full?feedback():''}
+    </div></div>`;
+}
+const aiNote=`<div class="ai">${I.spark}<span>Sources are shown in each update. For information only, not financial advice.</span></div>`;
+
+/* ===================== charts ===================== */
+function series(){
+  const K=[[1999.6,1.0],[1999.9,1.13],[2000.3,0.98],[2000.9,0.9],[2001.7,0.62],[2002.3,0.78],[2002.8,0.62],[2003.2,0.57],[2003.9,0.82],[2004.6,0.92],[2005.5,1.0],[2006.4,1.12],[2006.9,1.35],[2007.4,1.62],[2007.8,1.8],[2008.1,1.55],[2008.5,1.4],[2008.9,0.85],[2009.2,0.66],[2009.6,1.1],[2010.2,1.2],[2010.9,1.38],[2011.3,1.35],[2011.8,1.2],[2012.4,1.3],[2013.0,1.58],[2013.4,1.75],[2013.7,1.5],[2014.4,1.6],[2014.9,1.62],[2015.4,1.62],[2015.9,1.32],[2016.4,1.38],[2017.0,1.45],[2017.6,1.62],[2018.1,1.72],[2018.6,1.52],[2018.9,1.48],[2019.5,1.55],[2019.9,1.5],[2020.2,1.12],[2020.6,1.3],[2021.0,1.38],[2021.5,1.45],[2022.0,1.42],[2022.6,1.4],[2023.2,1.42],[2023.8,1.32],[2024.4,1.36],[2024.9,1.42],[2025.4,1.5],[2025.8,1.62],[2026.2,1.82],[2026.75,1.994]];
+  const out=[];let s=7;const rnd=()=>{s=(s*9301+49297)%233280;return s/233280};
+  for(let t=1999.6;t<=2026.75;t+=0.03){
+    let i=0;while(i<K.length-2&&K[i+1][0]<t)i++;
+    const [t0,v0]=K[i],[t1,v1]=K[i+1];const f=Math.min(1,Math.max(0,(t-t0)/(t1-t0)));
+    let v=v0+(v1-v0)*f+(rnd()-.5)*0.06*v0; if(t>2026.7) v=v0+(v1-v0)*f;
+    out.push([t,v]);
+  }
+  return out;
+}
+const S=series();
+function chart(kind){
+  const W=376,H=232,L=56,R=10,T=10,B=34;
+  const yMin= kind==='nav'?0.4:0, yMax= kind==='nav'?2.4:50000;
+  const ticks= kind==='nav'?[2.4,2.0,1.6,1.2,0.8,0.4]:[50000,40000,30000,20000,10000,0];
+  const pts=S.map(([t,v])=>[t, kind==='nav'?v:10000*v*Math.exp(0.0283*(t-1999.6))*(t>2026.7?1.0005:1)]);
+  const X=t=>L+(t-1999.6)/(2026.75-1999.6)*(W-L-R), Y=v=>T+(1-(v-yMin)/(yMax-yMin))*(H-T-B);
+  const d=pts.map(([t,v],i)=>`${i?'L':'M'}${X(t).toFixed(1)},${Y(v).toFixed(1)}`).join('');
+  const area=d+`L${X(2026.75)},${Y(yMin)}L${X(1999.6)},${Y(yMin)}Z`;
+  const grid=ticks.map(v=>`<line x1="${L}" x2="${W-R+6}" y1="${Y(v)}" y2="${Y(v)}" stroke="${v===yMin?'#bdbdbd':'#dedede'}" stroke-dasharray="${v===yMin?'':'3 3'}"/><text x="${L-6}" y="${Y(v)+4.5}" text-anchor="end" font-size="13" fill="#555">${kind==='nav'?v.toFixed(4):v.toLocaleString('en-US')}</text>`).join('');
+  const xl=[['Aug \'99',1999.6],['Dec \'04',2004.95],['Jun \'10',2010.45],['Nov \'15',2015.85],['Apr \'21',2021.3],['Sep \'26',2026.75]].map(([l,t])=>`<text x="${X(t)}" y="${H-10}" text-anchor="middle" font-size="13" fill="#555">${l}</text>`).join('');
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block;margin:0 -4px">${grid}<path d="${area}" fill="#FFF4EE"/><path d="${d}" fill="none" stroke="#EA5F00" stroke-width="1.6" stroke-linejoin="round"/>${xl}</svg>`;
+}
+function donut(){
+  const segs=[[33,'#E8636F'],[23,'#F2B22A'],[13,'#2BA4E8'],[31,'#9E9E9E']];
+  const r=62,c=2*Math.PI*r;let acc=0;
+  const arcs=segs.map(([p,col])=>{const len=c*p/100;const s=`<circle r="${r}" cx="80" cy="80" fill="none" stroke="${col}" stroke-width="35" stroke-dasharray="${len} ${c-len}" stroke-dashoffset="${-acc}" transform="rotate(-90 80 80)"/>`;acc+=len;return s}).join('');
+  return `<svg width="160" height="160" viewBox="0 0 160 160">${arcs}</svg>`;
+}
+
+/* ===================== screens ===================== */
+function pulseCard(){
+  return `<div class="card isnew" id="pulse">
+    <div class="sec-h" style="margin-top:6px">Fund Updates<span class="npill">NEW</span></div>
+    <div class="fu-sub">Recent market developments that may have affected this fund</div>
+    <div class="tl">
+      ${entry(byId.s30,{clamp:3,first:true})}
+      ${entry(byId.s29,{clamp:2})}
+    </div>
+    <div class="seemore" data-go="timeline" style="padding-top:6px;border-top:1px solid #f0f0f0">See all updates ${I.chevB()}</div>
+    ${aiNote}
+  </div>`;
+}
+
+function productScreen(){
+  return `${status(false)}
+  <div class="sticky" data-sticky>
+    <div class="nav"><span class="back">${I.back()}</span><h2>Mari Invest</h2></div>
+    <div class="pills">
+      <span class="pill on" data-jump="top">Overview</span><span class="pill" data-jump="perf">Performance</span><span class="pill" data-jump="docs">Documents</span><span class="pill" data-jump="faq">FAQ</span>
+    </div>
+  </div>
+  <div class="scroll" data-main style="padding-bottom:110px">
+    <div class="hero">
+      <div style="height:54px"></div>
+      <div class="nav"><span class="back">${I.back()}</span><h2>Mari Invest</h2></div>
+      <h3 class="hero-title">Mari Invest Singapore Equity</h3>
+      <div class="card">
+        <div class="statbox">
+          <div class="h">Since Inception Return ${I.info('#999',19)}</div>
+          <div class="u">Last updated: 01 Oct 2026, 16:28</div>
+          <div class="row"><div class="big">${I.trend}<span class="n" style="margin-left:9px">5.51</span><span class="p">% p.a.</span><span class="s">*</span></div><span class="risk">Risk: High</span></div>
+        </div>
+        <ul class="bul">
+          <li><span>Potential <span class="g">5.65% p.a.</span>** in monthly payouts</span></li>
+          <li>Well-established for more than 25 years</li>
+          <li>Start from S$1, no transaction fees</li>
+        </ul>
+        <div class="mas">${I.shield}<div><div class="a">We are regulated by the</div><div class="b">Monetary Authority of Singapore</div></div></div>
+        <p class="disc">*Historical returns are not indicative of future performance. Returns may vary and are not guaranteed.</p>
+        <p class="disc" style="margin-top:14px">**Historical payouts are not indicative of future payouts. Payouts may vary and are not guaranteed.</p>
+      </div>
+    </div>
+    ${pulseCard()}
+    <div class="card" style="padding-top:22px">
+      <div class="sec-h">Why invest in Singapore Equities?</div>
+      <p class="para">Singapore is one of the highest dividend-paying markets with a well-developed economy, and mature, well-managed companies. The country's robust financial regulations, a business-friendly environment and sound political stability provide a high degree of predictability for businesses operating here and anchor investor confidence over the long run.</p>
+      <div class="sec-h" style="margin-top:36px">More About Mari Invest Singapore Equity</div>
+      <p class="para">Under Mari Invest Singapore Equity, we distribute the Amova Singapore Dividend Equity Fund - SGD Class (formerly Nikko AM). With over two decades of performance, the award-winning fund seeks to bring investors exposure to good quality companies listed in Singapore that offer attractive and sustainable dividend payments with the potential for long-term capital appreciation. The fund targets monthly payouts of 5-7% p.a.^</p>
+      <div class="sec-h" style="margin-top:36px">What does the Fund Invest in?</div>
+      <p class="para">The fund invests primarily in Singapore companies delivering high and sustainable dividend yields and those with the potential for strong dividend growth. These include financial institutions, real estate and industrial giants. Other sectors include communication services, consumer discretionary, and information technology. By targeting these established market leaders, the fund aims to deliver a reliable income stream alongside long-term capital appreciation.</p>
+      <div class="donutbox">${donut()}<div class="legend">
+        <div><i style="background:#E8636F"></i>Financials<b>33%</b></div>
+        <div><i style="background:#F2B22A"></i>Industrials<b>23%</b></div>
+        <div><i style="background:#2BA4E8"></i>Real Estate<b>13%</b></div>
+        <div><i style="background:#9E9E9E"></i>Others<b>31%</b></div></div></div>
+      <p class="src">Source: Amova Asset Management Asia Limited (as of 31 July 2026)</p>
+      <div class="sec-h" style="margin-top:40px">Top Holdings</div>
+      <p class="para">The fund manager performs disciplined fundamental research aimed at uncovering companies characterised by undervalued positive fundamental change and high, sustainable returns.</p>
+      <table class="hold"><tr><th>Underlying</th><th>Allocation</th></tr>
+        <tr><td>DBS Group Holdings Ltd</td><td>9.80%</td></tr>
+        <tr><td>Oversea-Chinese Banking Corporation Limited</td><td>9.50%</td></tr>
+        <tr><td>United Overseas Bank Limited</td><td>7.80%</td></tr>
+        <tr><td>Singapore Exchange Ltd.</td><td>5.80%</td></tr>
+        <tr><td>Keppel Ltd.</td><td>4.80%</td></tr></table>
+      <p class="src">Source: Amova Asset Management Asia Limited (as of 31 July 2026)</p>
+    </div>
+    <div class="card" data-sec="perf">
+      <div class="ptabs"><div class="on" data-pt="perf">Fund Performance</div><div data-pt="nav">Unit Price</div></div>
+      <div data-ptp="perf">
+        <div class="perf-h">Performance on S$10,000 Invested</div>
+        <p class="ret">Return*: <span class="g">+ SGD 32,911.50 (+ 5.51% p.a.)</span></p>
+        ${chart('perf')}
+      </div>
+      <div data-ptp="nav" hidden><div style="height:24px"></div>${chart('nav')}</div>
+      <div class="ranges"><span>1 Month</span><span>6 Months</span><span>1 Year</span><span>3 Years</span><span>5 Years</span></div>
+      <div class="upd">Last updated: 01 Oct 2026, 16:28 ${I.info('#666',20)}</div>
+      <p class="fine">*The total return from price change and monthly payouts reinvested, based on the unit price as of 30 September 2026.</p>
+      <p class="fine">Average annual compounded returns (%) are displayed for time periods greater than 1 year. Historical returns are not indicative of future performance. Returns may vary and are not guaranteed.</p>
+    </div>
+    <div class="card links" data-sec="docs" style="padding-top:22px">
+      <div class="sec-h" style="margin-bottom:28px">Fund Documents</div>
+      <a>View Prospectus</a><a>View Product Highlights Sheet</a><a>View Fact Sheet</a><a>View Fund Brochure</a><a>View Fund House Website</a><a>View Annual Report</a><a style="margin-bottom:6px">View Semi-Annual Report</a>
+    </div>
+    <div class="card faq" data-sec="faq" style="padding-top:26px">
+      <div class="sec-h" style="font-size:21px;margin-bottom:6px">Frequently Asked Questions</div>
+      <div class="q">What is Mari Invest Singapore Equity? ${I.chev('#888',18)}</div>
+      <div class="q">What are the fees charged on Mari Invest Singapore Equity? ${I.chev('#888',18)}</div>
+      <div class="q">What is the difference between the Target Payout Rate and the Since Inception Return for Mari Invest Singapore Equity? ${I.chev('#888',18)}</div>
+      <div class="q" style="border-bottom:0">Why do I see negative Total Return for Mari Invest Singapore Equity on some days? ${I.chev('#888',18)}</div>
+      <div class="seemore" style="border-top:1px solid #eee">See More ${I.chevB()}</div>
+    </div>
+  </div>
+  <div class="buybar"><div class="btn">Buy</div></div>`;
+}
+
+function timelineScreen(withBack=true,buy=true){
+  return `${status(false)}
+  <div class="scroll" style="padding-bottom:110px;background:#F7F8F9">
+    <div class="wnav"><div style="height:54px"></div>
+      <div class="nav"><span class="back" ${withBack?'data-back':''}>${I.back()}</span><h2>All Fund Updates</h2></div>
+      <div style="height:10px"></div></div>
+    <div class="card isnew" style="margin-top:12px">
+      <p class="tlhead">Recent market developments that may have affected this fund. Each update includes its sources and appears only after the fund's unit price is confirmed.</p>
+      <div class="chips"><span class="pill on" data-filter="all">All</span><span class="pill" data-filter="big">Larger moves</span></div>
+      <div data-list="all">
+        ${ENTRIES.map((e,i)=>entry(e,{full:true,first:i===0})).join('')}
+      </div>
+      <div data-list="big" hidden><div class="empty">No larger-than-usual moves in the last 30 days.<br>All updates remain available under “All”.</div></div>
+      ${aiNote}
+    </div>
+  </div>
+  ${buy?`<div class="buybar"><div class="btn">Buy</div></div>`:''}`;
+}
+
+function detailScreen(id){
+  return `${status(false)}
+  <div class="scroll" style="padding-bottom:40px;background:#F7F8F9">
+    <div class="wnav"><div style="height:54px"></div>
+      <div class="nav"><span class="back" data-back>${I.back()}</span><h2>Fund Update</h2></div>
+      <div style="height:10px"></div></div>
+    <div class="card isnew" style="margin-top:12px">
+      <div class="tl">${entry(byId[id],{full:true,first:true})}</div>
+      ${aiNote}
+    </div>
+  </div>`;
+}
+
+/* ---------- holdings ---------- */
+const ROWS=[
+  {d:'01 Oct 2026 (Thu)', v:-22.83, e:'s30'},
+  {d:'30 Sep 2026 (Wed)', v:-16.85, e:'s29'},
+  {d:'29 Sep 2026 (Tue)', v:15.22, e:'s28'},
+  {d:'28 Sep 2026 (Mon)', v:22.55, e:'s25'},
+  {d:'25 Sep 2026 (Fri)', v:4.08, e:null},
+];
+const amt=v=> v>=0?`<div class="amt up"><small>+SGD</small><b>${v.toFixed(2)}</b></div>`:`<div class="amt dn"><small>-SGD</small><b>${Math.abs(v).toFixed(2)}</b></div>`;
+function holdingsScreen(id){
+  const rows=ROWS.map((r,i)=>{return `<div class="rrow" style="cursor:default">
+      <div style="min-width:0"><div class="a">Daily Return</div><div class="b">${r.d}</div></div>
+      ${amt(r.v)}</div>`}).join('');
+  return `${status(true)}
+  <div class="scroll" data-hscroll style="padding-bottom:40px">
+   <div class="hold-bg">
+    <div style="height:54px"></div>
+    <div class="nav hnav"><span class="back">${I.back('#fff')}</span><h2>My Holdings</h2></div>
+    <div style="height:14px"></div>
+    <div class="hcard">
+      <div class="banner"><svg class="arcs" width="170" height="130" viewBox="0 0 170 130">${[40,52,64,76,88,100].map(r=>`<circle cx="120" cy="10" r="${r}" fill="none" stroke="#F5A27A" stroke-width="1"/>`).join('')}</svg>
+        <span style="position:relative">Mari Invest <span class="o">Singapore Equity</span></span><span class="circ">${I.chev('#EA5F00',12)}</span></div>
+      <div class="cmv"><div class="l">Current Market Value ${I.eye}</div>
+        <div class="v"><span class="c">SGD</span><span class="n">5,418.20</span>${I.chev('#777',20)}</div></div>
+      <div class="cols">
+        <div><div class="l">Return Since Purchase</div><div class="v">+9.36% ${I.info('#777',20)}</div></div>
+        <div><div class="l">Total Return</div><div class="v"><small>+SGD</small> 467.93 ${I.info('#777',20)}</div></div>
+      </div>
+      <div class="bt"><div class="sell">Sell</div><div class="buy">Buy</div></div>
+    </div>
+   </div>
+    <div class="lrow">${I.hist}View Historical Unit Price<span class="r">${I.chev('#888',18)}</span></div>
+    <div class="wcard">
+      <div class="sec-h" style="text-align:left;font-size:17px;margin:0 0 4px">Fund Updates<span class="npill">NEW</span></div>
+      <div style="font-size:13px;color:#999;margin-bottom:8px">30 Sep · Fund fell 0.42%</div>
+      <div class="tx">Singapore stocks fell as US bond yields rose. Banks and property companies are major holdings in this fund and may have contributed to the decline.</div>
+      <div style="display:flex;gap:18px;padding-top:10px">
+        <span class="seemore" data-go="detail" style="padding:0;color:#EA5F00;font-size:14.5px">Read update ${I.chevB('#EA5F00')}</span>
+        <span class="seemore" data-go="timeline" style="padding:0;font-size:14.5px">See all updates ${I.chevB()}</span></div>
+    </div>
+    <div class="lrow isnew" data-go="digest" style="cursor:pointer"><svg width="20" height="20" viewBox="0 0 20 20"><rect width="20" height="20" rx="3" fill="#FA5E00"/><rect x="4.5" y="5" width="11" height="10.5" rx="1.5" stroke="#fff" stroke-width="1.6" fill="none"/><path d="M4.5 8.5h11M8 3v3.5M12 3v3.5" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>Monthly Fund Update<span class="npill">NEW</span><span class="r">September ${I.chev('#888',18)}</span></div>
+    <div class="hcard">
+      <div class="rh">Returns ${I.chev('#888',18)}</div>
+      ${rows}
+      <div class="seemore" style="border-top:1px solid #ebebeb;padding:16px 0 18px">See More ${I.chevB()}</div>
+    </div>
+    <div class="hcard">
+      <div class="rh">Transactions ${I.chev('#888',18)}</div>
+      <div class="trow"><span class="ticon">${I.coin}</span><div class="m"><div class="x">Payout</div><div class="y">Mari Invest Singapore Equity</div><div class="z">10 Sep 2026, 18:02</div></div><div class="rt"><div class="v">SGD <b>25.00</b></div><div class="ok">Completed</div></div></div>
+      <div class="trow"><span class="ticon">${I.coin}</span><div class="m"><div class="x">Payout</div><div class="y">Mari Invest Singapore Equity</div><div class="z">11 Aug 2026, 18:05</div></div><div class="rt"><div class="v">SGD <b>24.73</b></div><div class="ok">Completed</div></div></div>
+      <div class="trow"><span class="ticon">${I.buy}</span><div class="m"><div class="x">Buy</div><div class="y">Mari Invest Singapore Equity</div><div class="z">15 Jul 2026, 10:12</div></div><div class="rt"><div class="v">SGD <b>5,000.00</b></div><div class="ok">Completed</div></div></div>
+      <div class="seemore" style="border-top:1px solid #ebebeb;padding:16px 0 18px">See More ${I.chevB()}</div>
+    </div>
+  </div>
+  <div class="pg" data-pg="digest">${digestScreen(true)}</div>
+  <div class="pg" data-pg="timeline">${timelineScreen(true,false)}</div>
+  <div class="pg" data-pg="detail">${detailScreen('s30')}</div>`;
+}
+function digestScreen(withBack=true){
+  return `${status(false)}
+  <div class="scroll" style="padding-bottom:40px;background:#F7F8F9">
+    <div class="wnav"><div style="height:54px"></div>
+      <div class="nav"><span class="back" ${withBack?'data-back':''}>${I.back()}</span><h2>September Fund Update</h2></div>
+      <div style="height:10px"></div></div>
+    <div class="isnew">
+    <div class="dg-head">
+      <div class="dg-eye">MONTHLY FUND UPDATE · SEPTEMBER 2026</div>
+      <div class="dg-title">Mari Invest Singapore Equity</div>
+      <div class="dg-sub">Published 1 October 2026 · Based on Fund Updates published in September</div>
+    </div>
+    <div class="card">
+      <div class="sec-h" style="text-align:left;font-size:17px;margin:0 0 10px">What may have affected the fund in September</div>
+      <div class="dg-item"><span class="dg-n">1</span><div><div class="dg-cat">Interest rates</div><b>US interest rates rose</b>
+        <p>The US Federal Reserve raised interest rates by 0.25 percentage points. US bond yields also rose. When bonds offer higher returns, investors may be less willing to pay for dividend shares, which are a major part of this fund.</p>
+        <div class="dg-src"><a href="https://www.federalreserve.gov/newsevents/pressreleases/monetary20260916a.htm" target="_blank" rel="noopener">US Federal Reserve</a> · <a href="https://investrade.com/market-review-september-29-2026/" target="_blank" rel="noopener">Investrade</a></div></div></div>
+      <div class="dg-item"><span class="dg-n">2</span><div><div class="dg-cat">Banks</div><b>Singapore bank shares rose</b>
+        <p>DBS, OCBC and UOB make up about 27% of the fund. Their shares rose on 25 September and again in early trade on 28 September.</p>
+        <div class="dg-src"><a href="https://www.businesstoday.com.my/2026/09/26/singapore-stocks-rise-as-bank-gains-lift-sti/" target="_blank" rel="noopener">BusinessToday</a> · <a href="https://tradingeconomics.com/singapore/stock-market/news/587094" target="_blank" rel="noopener">Trading Economics</a></div></div></div>
+      <div class="dg-item"><span class="dg-n">3</span><div><div class="dg-cat">Oil</div><b>Oil prices remained high</b>
+        <p>Brent crude traded above US$100 a barrel during September. Expensive oil can add to inflation and keep interest rates higher for longer.</p>
+        <div class="dg-src"><a href="https://www.businesstoday.com.my/2026/09/26/singapore-stocks-rise-as-bank-gains-lift-sti/" target="_blank" rel="noopener">BusinessToday</a></div></div></div>
+    </div>
+    <div class="card">
+      <div class="sec-h" style="text-align:left;font-size:17px;margin:0 0 10px">Updates from major holdings</div>
+      <div class="dg-row"><div><div class="nm">DBS, OCBC and UOB</div><div class="nt">Bank shares rose on 25 September and in early trade on 28 September. Together, they make up about 27% of the fund.</div></div></div>
+      <div class="dg-note">Weights are from the <a href="https://sg.amova-am.com/general/funds/detail/amova-singapore-dividend-equity-fund-sgd-class" target="_blank" rel="noopener">fund factsheet</a> dated 31 Jul 2026 and update when a new factsheet is published.</div>
+    </div>
+    <div class="card" style="padding-top:12px;padding-bottom:12px">
+      <div class="dg-row" style="padding:4px 0"><div><div class="nm">Monthly payout</div><div class="nt">Paid on 10 Sep 2026, as scheduled</div></div>${I.chev('#bbb',16)}</div>
+    </div>
+    <div class="card">
+      ${feedback()}
+      ${aiNote}
+    </div>
+    </div>
+  </div>`;
+}
+
+function lockScreen(){
+  return `<div class="lock">${status(true,'')}
+    <div class="date">Thursday 1 October</div>
+    <div class="clock">9:00</div>
+    <div class="notif ghost"></div>
+    <div class="notif isnew" data-go="digest" style="cursor:pointer">
+      <div class="app">${I.pulse('#fff',22)}</div>
+      <div style="flex:1"><div class="hd">Your September fund update is ready <span>now</span></div>
+      <div class="bd">See the main developments that may have affected the fund this month.</div></div>
+    </div>
+    <div class="lockbot"><div><svg width="20" height="22" viewBox="0 0 20 22"><path d="M7 1h6l-1 6h4L7 21l2-9H4z" fill="#fff"/></svg></div><div><svg width="22" height="18" viewBox="0 0 22 18"><rect x="1" y="4" width="20" height="13" rx="3" stroke="#fff" stroke-width="1.8" fill="none"/><circle cx="11" cy="10.5" r="3.8" stroke="#fff" stroke-width="1.8" fill="none"/><path d="M7 4l1.5-3h5L15 4" stroke="#fff" stroke-width="1.8" fill="none"/></svg></div></div>
+  </div>
+  <div class="pg" data-pg="digest">${digestScreen(true)}</div>`;
+}
+
+/* ===================== mount ===================== */
+const slot=(ph,n,t,c)=>`<div class="slot">${ph}<div class="cap"><span class="num">${n}</span><b>${t}</b> ${c}</div></div>`;
+document.getElementById('before').innerHTML =
+  slot(phone(`<div data-stack style="position:absolute;inset:0"><div data-pg="product" style="position:absolute;inset:0">${productScreen()}</div><div data-pg="timeline" style="position:absolute;inset:0;transform:translateX(100%);transition:transform .3s cubic-bezier(.2,.8,.2,1);z-index:65">${timelineScreen(true)}</div></div>`,'p1'),
+    1,'Product page.','Fund Updates appears below “Since Inception Return” and shows the two latest updates. Scroll the phone, then select <i>See all updates</i>.') +
+  slot(phone(timelineScreen(false),'p2'),2,'Full history.','Browse confirmed fund movements, open their sources and filter for larger-than-usual moves.');
+document.getElementById('after').innerHTML =
+  slot(phone(holdingsScreen(),'p4'),3,'My Holdings.','The latest reviewed update appears alongside the customer\'s holding and returns. Select <i>Read update</i>, <i>See all updates</i> or <i>Monthly Fund Update</i>.') +
+  slot(phone(lockScreen(),'p3'),'4A','Notification.','The notification says only that the update is ready, without highlighting gains, losses or urgency.') +
+  slot(phone(digestScreen(false),'p6'),'4B','Monthly summary.','A sourced recap of the main developments that may have affected the fund during the month.');
+
+/* ===================== behaviour ===================== */
+function wire(root){
+  root.addEventListener('click',ev=>{
+    const t=ev.target.closest('[data-more],[data-src],[data-fb],[data-filter],[data-go],[data-back],[data-jump],[data-pt]');
+    if(!t||!root.contains(t))return;
+    if(t.dataset.more!==undefined){const tx=t.previousElementSibling;tx.classList.remove('clamp2','clamp3');t.remove();}
+    else if(t.dataset.src!==undefined){const l=t.nextElementSibling;l.hidden=!l.hidden;}
+    else if(t.dataset.fb!==undefined){const w=t.parentElement;w.querySelectorAll('button').forEach(b=>b.classList.remove('sel'));t.classList.add('sel');w.querySelector('.fbmsg').textContent='Thanks for the feedback';}
+    else if(t.dataset.filter){const c=t.closest('.card');c.querySelectorAll('[data-filter]').forEach(p=>p.classList.toggle('on',p===t));c.querySelector('[data-list="all"]').hidden=t.dataset.filter!=='all';c.querySelector('[data-list="big"]').hidden=t.dataset.filter!=='big';}
+    else if(t.dataset.go){const pg=root.querySelector(`[data-pg="${t.dataset.go}"]`);if(pg){pg.style.transform='none';pg.querySelector('.scroll').scrollTop=0;}}
+    else if(t.dataset.back!==undefined){const pg=t.closest('[data-pg]');if(pg)pg.style.transform='translateX(100%)';}
+    else if(t.dataset.jump){const sc=root.querySelector('[data-main]');const tgt=t.dataset.jump==='top'?null:sc.querySelector(`[data-sec="${t.dataset.jump}"]`);sc.scrollTo({top:tgt?tgt.offsetTop-160:0,behavior:'smooth'});root.querySelectorAll('[data-jump]').forEach(p=>p.classList.toggle('on',p===t));}
+    else if(t.dataset.pt){const c=t.closest('.card');c.querySelectorAll('[data-pt]').forEach(p=>p.classList.toggle('on',p===t));c.querySelectorAll('[data-ptp]').forEach(p=>p.hidden=p.dataset.ptp!==t.dataset.pt);}
+  });
+  const sc=root.querySelector('[data-main]'),st=root.querySelector('[data-sticky]');
+  if(sc&&st)sc.addEventListener('scroll',()=>st.classList.toggle('on',sc.scrollTop>110));
+}
+['p1','p2','p3','p4','p6'].forEach(id=>wire(document.getElementById(id)));
+// p1: start scrolled so the new card is in view under the hero card
+(()=>{const r=document.getElementById('p1');const sc=r.querySelector('[data-main]');requestAnimationFrame(()=>{sc.scrollTop=0;});})();
+
+/* view toggle */
+document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.seg button').forEach(x=>x.classList.toggle('on',x===b));
+  document.getElementById('before').hidden=b.dataset.view!=='before';
+  document.getElementById('after').hidden=b.dataset.view!=='after';
+  fit();
+});
+
+
+/* scale phones */
+function fit(){
+  const vw=document.documentElement.clientWidth;
+  const visible=document.querySelector('.stage:not([hidden])');const n=visible.children.length;
+  let z=Math.min(.8,(Math.min(vw,1240)-32-(n-1)*28)/(446*n));
+  if(z<.62) z=Math.min(.8,(vw-32)/446);
+  document.documentElement.style.setProperty('--z',z.toFixed(3));
+}
+addEventListener('resize',fit);fit();
+</script>
+</body>
+</html>
